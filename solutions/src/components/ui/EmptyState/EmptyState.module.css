@@ -1,0 +1,35 @@
+/* EmptyState Component Styles */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-12) var(--spacing-6);
+    text-align: center;
+}
+
+.icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-4);
+    opacity: 0.6;
+}
+
+.title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-2) 0;
+}
+
+.message {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 280px;
+    line-height: var(--line-height-relaxed);
+}
+
+.action {
+    margin-top: var(--spacing-6);
+}

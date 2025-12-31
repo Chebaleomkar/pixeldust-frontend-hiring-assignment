@@ -1,0 +1,171 @@
+/* Button Component Styles */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 2px solid transparent;
+    outline: none;
+    white-space: nowrap;
+    text-decoration: none;
+    user-select: none;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* ============================================
+   Size Variants
+   ============================================ */
+
+.size-sm {
+    height: 32px;
+    padding: 0 var(--spacing-3);
+    font-size: var(--font-size-sm);
+    min-width: 64px;
+}
+
+.size-md {
+    height: 40px;
+    padding: 0 var(--spacing-4);
+    font-size: var(--font-size-sm);
+    min-width: 80px;
+}
+
+.size-lg {
+    height: 48px;
+    padding: 0 var(--spacing-6);
+    font-size: var(--font-size-base);
+    min-width: 100px;
+}
+
+/* ============================================
+   Color Variants
+   ============================================ */
+
+/* Primary - Green (Book action) */
+.variant-primary {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.variant-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 166, 77, 0.3);
+}
+
+.variant-primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Secondary - Pink/Red outline (Cancel action) */
+.variant-secondary {
+    background-color: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.variant-secondary:hover:not(:disabled) {
+    background-color: var(--color-accent-light);
+    transform: translateY(-1px);
+}
+
+.variant-secondary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Outline - Neutral outline */
+.variant-outline {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+}
+
+.variant-outline:hover:not(:disabled) {
+    background-color: var(--color-background);
+    border-color: var(--color-text-muted);
+}
+
+/* Danger - Filled red */
+.variant-danger {
+    background-color: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+}
+
+.variant-danger:hover:not(:disabled) {
+    background-color: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(226, 0, 106, 0.3);
+}
+
+.variant-danger:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Ghost - No background */
+.variant-ghost {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+    border-color: transparent;
+}
+
+.variant-ghost:hover:not(:disabled) {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   States
+   ============================================ */
+
+.fullWidth {
+    width: 100%;
+}
+
+.loading {
+    pointer-events: none;
+}
+
+/* ============================================
+   Icon Styles
+   ============================================ */
+
+.leftIcon,
+.rightIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leftIcon {
+    margin-right: var(--spacing-1);
+}
+
+.rightIcon {
+    margin-left: var(--spacing-1);
+}
+
+.label {
+    display: inline-flex;
+    align-items: center;
+}

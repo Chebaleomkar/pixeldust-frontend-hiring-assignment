@@ -1,0 +1,74 @@
+/* ShiftGroup Component Styles */
+
+.group {
+    margin-bottom: var(--spacing-2);
+}
+
+.group:last-child {
+    margin-bottom: 0;
+}
+
+/* Date Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-3) var(--spacing-4);
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border-light);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.date {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.count {
+    color: var(--color-text-secondary);
+}
+
+.separator {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+}
+
+.hours {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Shifts Container */
+.shifts {
+    background-color: var(--color-surface);
+}
+
+/* Shift Wrapper with Animation */
+.shiftWrapper {
+    animation: slideIn var(--transition-normal) ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

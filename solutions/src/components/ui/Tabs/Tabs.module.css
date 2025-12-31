@@ -1,0 +1,64 @@
+/* Tabs Component Styles */
+
+.tabs {
+    display: flex;
+    position: relative;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0;
+    margin: 0;
+}
+
+.tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-4) var(--spacing-3);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    position: relative;
+    z-index: 1;
+}
+
+.tab:hover:not(.active) {
+    color: var(--color-text-secondary);
+}
+
+.tab.active {
+    color: var(--color-primary);
+}
+
+.tab:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm);
+}
+
+.tabLabel {
+    display: inline-block;
+}
+
+.tabCount {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    opacity: 0.8;
+}
+
+/* Animated Indicator */
+.indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-full) var(--radius-full) 0 0;
+    transition: transform var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+}
