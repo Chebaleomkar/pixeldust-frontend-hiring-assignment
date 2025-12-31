@@ -5,7 +5,7 @@
   "author": "Sandip Baradiya",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon ./api/server.js --exec babel-node"
+    "start": "nodemon ./api/server.js --exec \"npx babel-node\""
   },
   "dependencies": {
     "babel-cli": "^6.26.0",

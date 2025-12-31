@@ -1,5 +1,69 @@
 # Shift booking mock API
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js**: v9 or higher (recommended v18+)
+- **npm**: v5 or higher
+
+### Installation & Running
+
+1. **Navigate to the project root directory** (not the `api` folder):
+
+```bash
+cd pixeldust-frontend-hiring-assignment
+```
+
+2. **Install dependencies**:
+
+```bash
+npm install
+```
+
+3. **Start the API server**:
+
+```bash
+npm start
+```
+
+4. **Verify the server is running**:
+
+The server will start at `http://localhost:8080`. You should see:
+
+```
+✅ API server is listening at http://127.0.0.1:8080
+```
+
+### Quick Verification
+
+Test the API is working by visiting or running:
+
+```bash
+curl http://localhost:8080/shifts
+```
+
+Or open in browser: [http://localhost:8080/shifts](http://localhost:8080/shifts)
+
+### Troubleshooting
+
+#### `babel-node` is not recognized
+
+If you encounter this error:
+```
+'babel-node' is not recognized as an internal or external command
+```
+
+**Solution**: The `package.json` has been updated to use `npx babel-node`. Make sure you:
+1. Run `npm install` from the **root directory** (not from `api/` folder)
+2. Run `npm start` from the **root directory**
+
+#### Port 8080 already in use
+
+If port 8080 is already in use, stop any existing processes on that port or modify the server configuration.
+
+---
+
 ## Shift data model
 
 * `id`: UUID, a unique identifier
