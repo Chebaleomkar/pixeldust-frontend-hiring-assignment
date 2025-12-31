@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,9 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <div id="app-root">
-          {children}
-        </div>
+        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
+          <div id="app-root">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

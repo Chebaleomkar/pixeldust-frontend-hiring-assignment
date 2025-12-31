@@ -23,6 +23,12 @@
     color: white;
 }
 
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
 .refreshButton {
     background: rgba(255, 255, 255, 0.15);
     border: none;

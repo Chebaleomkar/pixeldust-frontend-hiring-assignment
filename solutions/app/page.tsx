@@ -11,7 +11,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useShiftStore } from '@/stores/shiftStore';
 import { TabType } from '@/types/shift';
 import { TAB_LABELS } from '@/utils/constants';
-import { Tabs, TabItem } from '@/components/ui/Tabs';
+import { Tabs, TabItem, ThemeToggle } from '@/components/ui';
 import { MyShiftsView } from '@/components/views/MyShiftsView';
 import { AvailableShiftsView } from '@/components/views/AvailableShiftsView';
 import styles from './page.module.css';
@@ -82,14 +82,17 @@ export default function HomePage() {
             <span className={styles.logoIcon}>📅</span>
             Shifts
           </h1>
-          <button
-            className={`${styles.refreshButton} ${isLoading ? styles.spinning : ''}`}
-            onClick={() => refreshShifts()}
-            disabled={isLoading}
-            aria-label="Refresh shifts"
-          >
-            🔄
-          </button>
+          <div className={styles.actions}>
+            <ThemeToggle />
+            <button
+              className={`${styles.refreshButton} ${isLoading ? styles.spinning : ''}`}
+              onClick={() => refreshShifts()}
+              disabled={isLoading}
+              aria-label="Refresh shifts"
+            >
+              🔄
+            </button>
+          </div>
         </header>
 
         {/* Error Banner */}

@@ -12,3 +12,4 @@ export { Tabs } from './Tabs';
 export type { TabItem } from './Tabs';
 
 export { EmptyState } from './EmptyState';
+export { ThemeToggle } from './ThemeToggle';
