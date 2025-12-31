@@ -1,65 +1,142 @@
-import Image from "next/image";
+/**
+ * Shift Booking App - Main Page
+ * 
+ * The main entry point for the shift booking application.
+ * Handles tab navigation between My Shifts and Available Shifts.
+ */
 
-export default function Home() {
+'use client';
+
+import React, { useEffect, useCallback } from 'react';
+import { useShiftStore } from '@/stores/shiftStore';
+import { TabType } from '@/types/shift';
+import { TAB_LABELS } from '@/utils/constants';
+import { Tabs, TabItem } from '@/components/ui/Tabs';
+import { MyShiftsView } from '@/components/views/MyShiftsView';
+import { AvailableShiftsView } from '@/components/views/AvailableShiftsView';
+import styles from './page.module.css';
+
+// Tab configuration
+const tabs: TabItem[] = [
+  { id: 'my-shifts', label: TAB_LABELS['my-shifts'] },
+  { id: 'available-shifts', label: TAB_LABELS['available-shifts'] },
+];
+
+export default function HomePage() {
+  // Zustand store
+  const {
+    shifts,
+    activeTab,
+    selectedArea,
+    isLoading,
+    error,
+    shiftLoadingStates,
+    fetchShifts,
+    refreshShifts,
+    bookShift,
+    cancelShift,
+    setActiveTab,
+    setSelectedArea,
+    clearError,
+  } = useShiftStore();
+
+  // Fetch shifts on mount
+  useEffect(() => {
+    fetchShifts();
+  }, [fetchShifts]);
+
+  // Handle tab change
+  const handleTabChange = useCallback((tabId: string) => {
+    setActiveTab(tabId as TabType);
+  }, [setActiveTab]);
+
+  // Handle book shift
+  const handleBook = useCallback(async (shiftId: string) => {
+    const success = await bookShift(shiftId);
+    if (success) {
+      // Optionally show success feedback
+    }
+  }, [bookShift]);
+
+  // Handle cancel shift
+  const handleCancel = useCallback(async (shiftId: string) => {
+    const success = await cancelShift(shiftId);
+    if (success) {
+      // Optionally show success feedback
+    }
+  }, [cancelShift]);
+
+  // Count booked shifts for tab
+  const bookedShiftsCount = shifts.filter(s => s.booked).length;
+  const tabsWithCounts: TabItem[] = [
+    { id: 'my-shifts', label: TAB_LABELS['my-shifts'], count: bookedShiftsCount },
+    { id: 'available-shifts', label: TAB_LABELS['available-shifts'] },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className={styles.main}>
+      <div className={styles.container}>
+        {/* Header */}
+        <header className={styles.header}>
+          <h1 className={styles.logo}>
+            <span className={styles.logoIcon}>📅</span>
+            Shifts
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            className={`${styles.refreshButton} ${isLoading ? styles.spinning : ''}`}
+            onClick={() => refreshShifts()}
+            disabled={isLoading}
+            aria-label="Refresh shifts"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            🔄
+          </button>
+        </header>
+
+        {/* Error Banner */}
+        {error && (
+          <div className={styles.errorBanner} role="alert">
+            <span className={styles.errorMessage}>{error}</span>
+            <button
+              className={styles.errorDismiss}
+              onClick={clearError}
+              aria-label="Dismiss error"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {/* Tab Navigation */}
+        <Tabs
+          tabs={tabsWithCounts}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
+
+        {/* Tab Content */}
+        <div className={styles.content}>
+          {activeTab === 'my-shifts' && (
+            <MyShiftsView
+              shifts={shifts}
+              loadingStates={shiftLoadingStates}
+              onCancel={handleCancel}
+              isLoading={isLoading}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          )}
+
+          {activeTab === 'available-shifts' && (
+            <AvailableShiftsView
+              shifts={shifts}
+              selectedCity={selectedArea}
+              onCityChange={setSelectedArea}
+              loadingStates={shiftLoadingStates}
+              onBook={handleBook}
+              onCancel={handleCancel}
+              isLoading={isLoading}
+            />
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

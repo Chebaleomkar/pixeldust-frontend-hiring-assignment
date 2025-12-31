@@ -30,7 +30,8 @@ interface ShiftStore {
     // ================ Actions =================
 
     // Data fetching
-    fetchShifts: () => Promise<void>;
+    fetchShifts: (silent?: boolean) => Promise<void>;
+    refreshShifts: () => Promise<void>;
 
     // Shift operations
     bookShift: (shiftId: string) => Promise<boolean>;
@@ -65,8 +66,9 @@ export const useShiftStore = create<ShiftStore>()(
             /**
              * Fetch all shifts from API
              */
-            fetchShifts: async () => {
-                set({ isLoading: true, error: null });
+            fetchShifts: async (silent = false) => {
+                if (!silent) set({ isLoading: true, error: null });
+                else set({ error: null });
 
                 try {
                     const shifts = await shiftApi.fetchAll();
@@ -77,6 +79,14 @@ export const useShiftStore = create<ShiftStore>()(
                         : (error as { message?: string })?.message || 'Failed to fetch shifts';
                     set({ error: message, isLoading: false });
                 }
+            },
+
+            /**
+             * Manually refresh shifts
+             */
+            refreshShifts: async () => {
+                const { fetchShifts } = get();
+                await fetchShifts(true);
             },
 
             /**
