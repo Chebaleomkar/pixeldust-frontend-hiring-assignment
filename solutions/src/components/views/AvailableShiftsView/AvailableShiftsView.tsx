@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Search, MapPin } from 'lucide-react';
 import { Shift, ShiftArea, ShiftLoadingState, SHIFT_AREAS } from '@/types/shift';
 import { groupShiftsByDate, filterShiftsByArea, countShiftsByArea } from '@/utils/dateUtils';
@@ -18,8 +18,14 @@ interface AvailableShiftsViewProps {
     isLoading?: boolean;
 }
 
-export function AvailableShiftsView({
-    shifts, selectedCity, onCityChange, loadingStates, onBook, onCancel, isLoading = false
+export const AvailableShiftsView = memo(function AvailableShiftsView({
+    shifts,
+    selectedCity,
+    onCityChange,
+    loadingStates,
+    onBook,
+    onCancel,
+    isLoading = false
 }: AvailableShiftsViewProps) {
     const cityCounts = useMemo(() => {
         const counts = countShiftsByArea(shifts);
@@ -31,7 +37,7 @@ export function AvailableShiftsView({
 
     if (isLoading) {
         return (
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4" aria-busy="true" aria-label="Loading available shifts">
                 <div className="flex gap-2">
                     <Skeleton className="h-9 w-24 rounded-full" />
                     <Skeleton className="h-9 w-24 rounded-full" />
@@ -48,17 +54,20 @@ export function AvailableShiftsView({
             <CityFilter selectedCity={selectedCity} onCityChange={onCityChange} cityCounts={cityCounts} />
 
             {groupedShifts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center" role="status">
+                    <div
+                        className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4"
+                        aria-hidden="true"
+                    >
                         <Search className="w-8 h-8 text-slate-400 dark:text-slate-500" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                    <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
                         No shifts in {selectedCity}
-                    </h3>
+                    </h2>
                     <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-4">
                         Try selecting another location.
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2" role="group" aria-label="Alternative locations">
                         {SHIFT_AREAS.filter(area => area !== selectedCity).map(area => {
                             const count = cityCounts.find(c => c.area === area)?.count || 0;
                             if (count === 0) return null;
@@ -66,9 +75,10 @@ export function AvailableShiftsView({
                                 <button
                                     key={area}
                                     onClick={() => onCityChange(area)}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors"
+                                    aria-label={`Switch to ${area} with ${count} shifts`}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                 >
-                                    <MapPin className="w-3 h-3" />
+                                    <MapPin className="w-3 h-3" aria-hidden="true" />
                                     {area} ({count})
                                 </button>
                             );
@@ -76,18 +86,20 @@ export function AvailableShiftsView({
                     </div>
                 </div>
             ) : (
-                groupedShifts.map((group) => (
-                    <ShiftGroup
-                        key={group.dateKey}
-                        group={group}
-                        loadingStates={loadingStates}
-                        onBook={onBook}
-                        onCancel={onCancel}
-                    />
-                ))
+                <div role="region" aria-label={`Available shifts in ${selectedCity}`}>
+                    {groupedShifts.map((group) => (
+                        <ShiftGroup
+                            key={group.dateKey}
+                            group={group}
+                            loadingStates={loadingStates}
+                            onBook={onBook}
+                            onCancel={onCancel}
+                        />
+                    ))}
+                </div>
             )}
         </div>
     );
-}
+});
 
 export default AvailableShiftsView;

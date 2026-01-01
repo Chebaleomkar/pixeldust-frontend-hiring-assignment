@@ -1,14 +1,3 @@
-/**
- * Application Constants
- * 
- * Centralized configuration and constant values
- * for the Shift Booking Application.
- */
-
-// ============================================
-// API Configuration
-// ============================================
-
 export const API_BASE_URL = '';
 
 export const API_ENDPOINTS = {
@@ -17,10 +6,6 @@ export const API_ENDPOINTS = {
     CANCEL_SHIFT: (id: string) => `/shifts/${id}/cancel`,
     GET_SHIFT: (id: string) => `/shifts/${id}`,
 } as const;
-
-// ============================================
-// UI Constants
-// ============================================
 
 export const TAB_LABELS = {
     'my-shifts': 'My shifts',
@@ -33,24 +18,9 @@ export const AREA_LABELS = {
     Turku: 'Turku',
 } as const;
 
-// ============================================
-// Design Tokens
-// ============================================
-
 export const COLORS = {
-    // Primary palette
-    primary: {
-        green: '#16A64D',
-        greenLight: '#E8F5EE',
-        greenDark: '#128A40',
-    },
-    // Secondary/Accent
-    accent: {
-        pink: '#E2006A',
-        pinkLight: '#FDE8F0',
-        pinkDark: '#C00059',
-    },
-    // Neutrals
+    primary: { green: '#16A64D', greenLight: '#E8F5EE', greenDark: '#128A40' },
+    accent: { pink: '#E2006A', pinkLight: '#FDE8F0', pinkDark: '#C00059' },
     neutral: {
         white: '#FFFFFF',
         background: '#F1F4F8',
@@ -61,19 +31,7 @@ export const COLORS = {
     },
 } as const;
 
-// ============================================
-// Animation Durations
-// ============================================
-
-export const ANIMATION = {
-    fast: 150,
-    normal: 300,
-    slow: 500,
-} as const;
-
-// ============================================
-// Date/Time Formatting
-// ============================================
+export const ANIMATION = { fast: 150, normal: 300, slow: 500 } as const;
 
 export const DATE_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
     weekday: 'long',

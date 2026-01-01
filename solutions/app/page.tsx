@@ -1,63 +1,69 @@
 'use client';
 
-import React, { useEffect, useCallback, memo } from 'react';
+import React, { useEffect, useCallback, useMemo, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { RefreshCw, Sun, Moon, AlertCircle, X } from 'lucide-react';
-import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useShiftStore } from '@/stores/shiftStore';
 import { TabType } from '@/types/shift';
 import { TAB_LABELS } from '@/utils/constants';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { MyShiftsView } from '@/components/views/MyShiftsView';
-import { AvailableShiftsView } from '@/components/views/AvailableShiftsView';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
-const HeaderActions = memo(function HeaderActions({
-  mounted,
-  theme,
-  setTheme,
-  refreshShifts,
-  isLoading
-}: {
-  mounted: boolean;
-  theme: string | undefined;
-  setTheme: (theme: string) => void;
-  refreshShifts: () => void;
-  isLoading: boolean;
-}) {
+const MyShiftsView = dynamic(
+  () => import('@/components/views/MyShiftsView').then(mod => ({ default: mod.MyShiftsView })),
+  {
+    loading: () => <ViewSkeleton />,
+    ssr: true
+  }
+);
+
+const AvailableShiftsView = dynamic(
+  () => import('@/components/views/AvailableShiftsView').then(mod => ({ default: mod.AvailableShiftsView })),
+  {
+    loading: () => <ViewSkeleton />,
+    ssr: true
+  }
+);
+
+function ViewSkeleton() {
   return (
-    <div className="flex items-center gap-2">
-      {mounted && (
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        >
-          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </Button>
-      )}
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="Refresh shifts"
-        className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-        onClick={refreshShifts}
-        disabled={isLoading}
-      >
-        <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} />
-      </Button>
+    <div className="p-6 space-y-4">
+      <Skeleton className="h-10 w-full rounded-xl" />
+      <Skeleton className="h-16 w-full rounded-xl" />
+      <Skeleton className="h-16 w-full rounded-xl" />
     </div>
   );
-});
+}
 
-export default function HomePage() {
+function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <div className="w-10 h-10" aria-hidden="true" />;
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    >
+      {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+    </Button>
+  );
+}
+
+export default function HomePage() {
   const {
     shifts,
     activeTab,
@@ -75,7 +81,6 @@ export default function HomePage() {
   } = useShiftStore();
 
   useEffect(() => {
-    setMounted(true);
     fetchShifts();
   }, [fetchShifts]);
 
@@ -91,7 +96,7 @@ export default function HomePage() {
     await cancelShift(shiftId);
   }, [cancelShift]);
 
-  const bookedShiftsCount = shifts.filter(s => s.booked).length;
+  const bookedShiftsCount = useMemo(() => shifts.filter(s => s.booked).length, [shifts]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
@@ -99,14 +104,12 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden shadow-md">
-                <Image
-                  src="/piexeldust.svg"
-                  alt="Pixeldust"
-                  width={40}
-                  height={40}
-                  priority
-                />
+              <div className="w-10 h-10 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <rect width="16" height="16" rx="2" fill="currentColor" className="text-white/20" />
+                  <path d="M4 4h4v4H4z" fill="white" />
+                  <path d="M8 8h4v4H8z" fill="white/80" />
+                </svg>
               </div>
               <div>
                 <h1 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
@@ -118,13 +121,19 @@ export default function HomePage() {
               </div>
             </div>
 
-            <HeaderActions
-              mounted={mounted}
-              theme={theme}
-              setTheme={setTheme}
-              refreshShifts={refreshShifts}
-              isLoading={isLoading}
-            />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Refresh shifts"
+                className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                onClick={refreshShifts}
+                disabled={isLoading}
+              >
+                <RefreshCw className={cn("w-5 h-5", isLoading && "animate-spin")} aria-hidden="true" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -144,7 +153,7 @@ export default function HomePage() {
                 aria-label="Dismiss error"
                 className="h-7 w-7 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-md flex-shrink-0"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -168,7 +177,7 @@ export default function HomePage() {
                 <span className="flex items-center gap-2">
                   {TAB_LABELS['my-shifts']}
                   {bookedShiftsCount > 0 && (
-                    <Badge
+                    <span
                       className={cn(
                         "min-w-[20px] h-5 flex items-center justify-center px-1.5 rounded-full text-xs font-bold",
                         activeTab === 'my-shifts'
@@ -177,7 +186,7 @@ export default function HomePage() {
                       )}
                     >
                       {bookedShiftsCount}
-                    </Badge>
+                    </span>
                   )}
                 </span>
               </TabsTrigger>
