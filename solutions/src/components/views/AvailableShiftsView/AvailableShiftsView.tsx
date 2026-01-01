@@ -1,117 +1,90 @@
-/**
- * AvailableShiftsView Component
- * 
- * Displays all shifts filtered by city, grouped by date.
- * Allows booking and cancelling shifts.
- */
-
 'use client';
 
 import React, { useMemo } from 'react';
+import { Search, MapPin } from 'lucide-react';
 import { Shift, ShiftArea, ShiftLoadingState, SHIFT_AREAS } from '@/types/shift';
 import { groupShiftsByDate, filterShiftsByArea, countShiftsByArea } from '@/utils/dateUtils';
 import { CityFilter } from '@/components/shifts/CityFilter';
 import { ShiftGroup } from '@/components/shifts/ShiftGroup';
-import { EmptyState } from '@/components/ui/EmptyState';
-import styles from './AvailableShiftsView.module.css';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface AvailableShiftsViewProps {
-    /** All shifts from the store */
     shifts: Shift[];
-    /** Currently selected city */
     selectedCity: ShiftArea;
-    /** Callback when city selection changes */
     onCityChange: (city: ShiftArea) => void;
-    /** Loading states for individual shifts */
     loadingStates: ShiftLoadingState;
-    /** Callback to book a shift */
     onBook: (shiftId: string) => void;
-    /** Callback to cancel a shift */
     onCancel: (shiftId: string) => void;
-    /** Whether data is being loaded */
     isLoading?: boolean;
 }
 
 export function AvailableShiftsView({
-    shifts,
-    selectedCity,
-    onCityChange,
-    loadingStates,
-    onBook,
-    onCancel,
-    isLoading = false,
+    shifts, selectedCity, onCityChange, loadingStates, onBook, onCancel, isLoading = false
 }: AvailableShiftsViewProps) {
-    // Calculate counts per city for the filter
     const cityCounts = useMemo(() => {
         const counts = countShiftsByArea(shifts);
-        return SHIFT_AREAS.map(area => ({
-            area,
-            count: counts[area] || 0,
-        }));
+        return SHIFT_AREAS.map(area => ({ area, count: counts[area] || 0 }));
     }, [shifts]);
 
-    // Filter shifts by selected city
-    const filteredShifts = useMemo(() => {
-        return filterShiftsByArea(shifts, selectedCity);
-    }, [shifts, selectedCity]);
+    const filteredShifts = useMemo(() => filterShiftsByArea(shifts, selectedCity), [shifts, selectedCity]);
+    const groupedShifts = useMemo(() => groupShiftsByDate(filteredShifts, shifts), [filteredShifts, shifts]);
 
-    // Group filtered shifts by date
-    const groupedShifts = useMemo(() => {
-        return groupShiftsByDate(filteredShifts, shifts);
-    }, [filteredShifts, shifts]);
-
-    // Loading state
     if (isLoading) {
         return (
-            <div className={styles.container}>
-                <div className={styles.filterPlaceholder} />
-                <div className={styles.loading}>
-                    <div className={styles.skeleton} style={{ height: 60 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                    <div className={styles.skeleton} style={{ height: 60 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
+            <div className="p-6 space-y-4">
+                <div className="flex gap-2">
+                    <Skeleton className="h-9 w-24 rounded-full" />
+                    <Skeleton className="h-9 w-24 rounded-full" />
+                    <Skeleton className="h-9 w-20 rounded-full" />
                 </div>
+                <Skeleton className="h-16 w-full rounded-xl" />
+                <Skeleton className="h-16 w-full rounded-xl" />
             </div>
         );
     }
 
     return (
-        <div
-            className={styles.container}
-            role="tabpanel"
-            id="panel-available-shifts"
-            aria-labelledby="tab-available-shifts"
-        >
-            {/* City Filter */}
-            <CityFilter
-                selectedCity={selectedCity}
-                onCityChange={onCityChange}
-                cityCounts={cityCounts}
-            />
+        <div>
+            <CityFilter selectedCity={selectedCity} onCityChange={onCityChange} cityCounts={cityCounts} />
 
-            {/* Empty state for selected city */}
             {groupedShifts.length === 0 ? (
-                <EmptyState
-                    icon="🏙️"
-                    title={`No shifts in ${selectedCity}`}
-                    message="There are no available shifts in this area at the moment. Try selecting another city."
-                />
-            ) : (
-                /* Grouped Shifts */
-                <div className={styles.groups}>
-                    {groupedShifts.map((group) => (
-                        <ShiftGroup
-                            key={group.dateKey}
-                            group={group}
-                            loadingStates={loadingStates}
-                            onBook={onBook}
-                            onCancel={onCancel}
-                            showArea={false}
-                        />
-                    ))}
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                        <Search className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                        No shifts in {selectedCity}
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-4">
+                        Try selecting another location.
+                    </p>
+                    <div className="flex gap-2">
+                        {SHIFT_AREAS.filter(area => area !== selectedCity).map(area => {
+                            const count = cityCounts.find(c => c.area === area)?.count || 0;
+                            if (count === 0) return null;
+                            return (
+                                <button
+                                    key={area}
+                                    onClick={() => onCityChange(area)}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors"
+                                >
+                                    <MapPin className="w-3 h-3" />
+                                    {area} ({count})
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
+            ) : (
+                groupedShifts.map((group) => (
+                    <ShiftGroup
+                        key={group.dateKey}
+                        group={group}
+                        loadingStates={loadingStates}
+                        onBook={onBook}
+                        onCancel={onCancel}
+                    />
+                ))
             )}
         </div>
     );

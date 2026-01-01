@@ -1,108 +1,86 @@
-/**
- * MyShiftsView Component
- * 
- * Displays all booked shifts grouped by date.
- * Allows cancelling booked shifts.
- */
-
 'use client';
 
 import React from 'react';
+import { Calendar, Clock, CalendarCheck } from 'lucide-react';
 import { Shift, ShiftLoadingState } from '@/types/shift';
 import { groupShiftsByDate, getBookedShifts } from '@/utils/dateUtils';
 import { ShiftGroup } from '@/components/shifts/ShiftGroup';
-import { EmptyState } from '@/components/ui/EmptyState';
-import styles from './MyShiftsView.module.css';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface MyShiftsViewProps {
-    /** All shifts from the store */
     shifts: Shift[];
-    /** Loading states for individual shifts */
     loadingStates: ShiftLoadingState;
-    /** Callback to cancel a shift */
     onCancel: (shiftId: string) => void;
-    /** Whether data is being loaded */
     isLoading?: boolean;
 }
 
-export function MyShiftsView({
-    shifts,
-    loadingStates,
-    onCancel,
-    isLoading = false,
-}: MyShiftsViewProps) {
-    // Filter to only booked shifts
+export function MyShiftsView({ shifts, loadingStates, onCancel, isLoading = false }: MyShiftsViewProps) {
     const bookedShifts = getBookedShifts(shifts);
-
-    // Group by date
     const groupedShifts = groupShiftsByDate(bookedShifts, shifts);
 
-    // Loading state
     if (isLoading) {
         return (
-            <div className={styles.container}>
-                <div className={styles.loading}>
-                    <div className={styles.skeleton} style={{ height: 60 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                    <div className={styles.skeleton} style={{ height: 60 }} />
-                    <div className={styles.skeleton} style={{ height: 80 }} />
-                </div>
+            <div className="p-6 space-y-4">
+                <Skeleton className="h-24 w-full rounded-xl" />
+                <Skeleton className="h-16 w-full rounded-xl" />
+                <Skeleton className="h-16 w-full rounded-xl" />
             </div>
         );
     }
 
-    // Empty state
     if (groupedShifts.length === 0) {
         return (
-            <div className={styles.container}>
-                <EmptyState
-                    icon="📅"
-                    title="No shifts booked"
-                    message="You haven't booked any shifts yet. Go to Available Shifts to book your first shift."
-                />
+            <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+                    <CalendarCheck className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">
+                    No shifts booked
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">
+                    Head to <span className="font-medium text-emerald-600 dark:text-emerald-400">Available Shifts</span> to book your first shift.
+                </p>
             </div>
         );
     }
 
-    // Calculate totals
     const totalShifts = bookedShifts.length;
     const totalHours = groupedShifts.reduce((acc, g) => acc + g.totalHours, 0);
 
     return (
-        <div
-            className={styles.container}
-            role="tabpanel"
-            id="panel-my-shifts"
-            aria-labelledby="tab-my-shifts"
-        >
-            {/* Summary Header */}
-            <header className={styles.summary}>
-                <div className={styles.summaryItem}>
-                    <span className={styles.summaryValue}>{totalShifts}</span>
-                    <span className={styles.summaryLabel}>
-                        {totalShifts === 1 ? 'Shift' : 'Shifts'}
-                    </span>
+        <div>
+            {/* Summary Stats */}
+            <div className="grid grid-cols-2 gap-4 p-6 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center">
+                        <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                        <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{totalShifts}</div>
+                        <div className="text-sm text-emerald-600 dark:text-emerald-400">Booked Shifts</div>
+                    </div>
                 </div>
-                <div className={styles.summaryDivider} />
-                <div className={styles.summaryItem}>
-                    <span className={styles.summaryValue}>{Math.round(totalHours * 10) / 10}h</span>
-                    <span className={styles.summaryLabel}>Total</span>
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/30">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center">
+                        <Clock className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                        <div className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">{totalHours}h</div>
+                        <div className="text-sm text-indigo-600 dark:text-indigo-400">Total Hours</div>
+                    </div>
                 </div>
-            </header>
-
-            {/* Grouped Shifts */}
-            <div className={styles.groups}>
-                {groupedShifts.map((group) => (
-                    <ShiftGroup
-                        key={group.dateKey}
-                        group={group}
-                        loadingStates={loadingStates}
-                        onCancel={onCancel}
-                        showArea={true}
-                    />
-                ))}
             </div>
+
+            {/* Shift Groups */}
+            {groupedShifts.map((group) => (
+                <ShiftGroup
+                    key={group.dateKey}
+                    group={group}
+                    loadingStates={loadingStates}
+                    onCancel={onCancel}
+                    showArea
+                />
+            ))}
         </div>
     );
 }

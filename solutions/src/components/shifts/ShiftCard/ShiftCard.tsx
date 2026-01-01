@@ -1,30 +1,18 @@
-/**
- * ShiftCard Component
- * 
- * Displays a single shift with time, duration, and action button.
- * Handles book/cancel actions with loading states.
- */
-
 'use client';
 
 import React from 'react';
+import { Clock, Check, MapPin, Timer } from 'lucide-react';
 import { ShiftWithMeta } from '@/types/shift';
 import { formatTimeRange, formatDuration } from '@/utils/dateUtils';
-import { Button } from '@/components/ui/Button';
-import styles from './ShiftCard.module.css';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface ShiftCardProps {
-    /** Shift data with computed metadata */
     shift: ShiftWithMeta;
-    /** Whether the shift is currently being booked/cancelled */
     isLoading?: boolean;
-    /** Type of loading operation */
     loadingType?: 'booking' | 'cancelling' | null;
-    /** Callback when book button is clicked */
     onBook?: (shiftId: string) => void;
-    /** Callback when cancel button is clicked */
     onCancel?: (shiftId: string) => void;
-    /** Whether to show the area/city label */
     showArea?: boolean;
 }
 
@@ -38,84 +26,78 @@ export function ShiftCard({
 }: ShiftCardProps) {
     const timeRange = formatTimeRange(shift.startTime, shift.endTime);
     const duration = formatDuration(shift.startTime, shift.endTime);
-
-    // Determine button state and text
-    const getButtonConfig = () => {
-        if (shift.booked) {
-            return {
-                variant: 'secondary' as const,
-                text: 'Cancel',
-                onClick: () => onCancel?.(shift.id),
-                disabled: isLoading,
-                loadingText: 'Cancelling...',
-            };
-        }
-
-        // Check if shift can be booked
-        if (shift.isStarted) {
-            return {
-                variant: 'outline' as const,
-                text: 'Started',
-                onClick: undefined,
-                disabled: true,
-                loadingText: '',
-            };
-        }
-
-        if (shift.isOverlapping) {
-            return {
-                variant: 'outline' as const,
-                text: 'Overlapping',
-                onClick: undefined,
-                disabled: true,
-                loadingText: '',
-            };
-        }
-
-        return {
-            variant: 'primary' as const,
-            text: 'Book',
-            onClick: () => onBook?.(shift.id),
-            disabled: isLoading,
-            loadingText: 'Booking...',
-        };
-    };
-
-    const buttonConfig = getButtonConfig();
     const isCurrentlyLoading = isLoading && loadingType !== null;
 
-    return (
-        <article className={styles.card}>
-            <div className={styles.content}>
-                {/* Time and Duration */}
-                <div className={styles.timeInfo}>
-                    <span className={styles.timeRange}>{timeRange}</span>
-                    <span className={styles.duration}>{duration}</span>
-                </div>
+    const getButtonProps = () => {
+        if (shift.booked) {
+            return { variant: 'cancel' as const, text: 'Cancel', onClick: () => onCancel?.(shift.id) };
+        }
+        if (shift.isStarted) {
+            return { variant: 'disabled' as const, text: 'Started', onClick: undefined };
+        }
+        if (shift.isOverlapping) {
+            return { variant: 'disabled' as const, text: 'Overlap', onClick: undefined };
+        }
+        return { variant: 'book' as const, text: 'Book', onClick: () => onBook?.(shift.id) };
+    };
 
-                {/* Area Label (optional) */}
-                {showArea && (
-                    <div className={styles.areaLabel}>
-                        <span className={styles.areaBadge}>{shift.area}</span>
-                    </div>
+    const btn = getButtonProps();
+
+    return (
+        <div className={cn(
+            "flex items-center gap-4 p-4 transition-colors",
+            "hover:bg-slate-50 dark:hover:bg-slate-800/50",
+            shift.booked && "bg-emerald-50/50 dark:bg-emerald-950/20"
+        )}>
+            {/* Icon */}
+            <div className={cn(
+                "flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center",
+                shift.booked
+                    ? "bg-emerald-100 dark:bg-emerald-900/50"
+                    : "bg-slate-100 dark:bg-slate-800"
+            )}>
+                {shift.booked ? (
+                    <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                ) : (
+                    <Clock className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                 )}
             </div>
 
-            {/* Action Button */}
-            <div className={styles.action}>
-                <Button
-                    variant={buttonConfig.variant}
-                    size="sm"
-                    onClick={buttonConfig.onClick}
-                    disabled={buttonConfig.disabled}
-                    isLoading={isCurrentlyLoading}
-                    loadingText={buttonConfig.loadingText}
-                    aria-label={`${buttonConfig.text} shift from ${timeRange}`}
-                >
-                    {buttonConfig.text}
-                </Button>
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+                <div className={cn(
+                    "font-semibold",
+                    shift.booked
+                        ? "text-emerald-700 dark:text-emerald-300"
+                        : "text-slate-800 dark:text-slate-100"
+                )}>
+                    {timeRange}
+                </div>
+                <div className="flex items-center gap-2 mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                    <Timer className="w-3.5 h-3.5" />
+                    <span>{duration}</span>
+                    {showArea && (
+                        <>
+                            <span className="text-slate-300 dark:text-slate-600">•</span>
+                            <MapPin className="w-3.5 h-3.5" />
+                            <span>{shift.area}</span>
+                        </>
+                    )}
+                </div>
             </div>
-        </article>
+
+            {/* Button */}
+            <Button
+                variant={btn.variant}
+                size="sm"
+                onClick={btn.onClick}
+                disabled={btn.variant === 'disabled'}
+                isLoading={isCurrentlyLoading}
+                className="min-w-[72px]"
+            >
+                {btn.text}
+            </Button>
+        </div>
     );
 }
 
