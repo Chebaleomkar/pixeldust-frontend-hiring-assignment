@@ -1,131 +1,178 @@
-# Shift Booking Application
+# 🗓️ Shift Booking App
 
-A production-grade React/Next.js application for managing work shifts. Built as part of the Pixeldust Frontend Hiring Assignment.
+A modern, responsive shift booking application built with **Next.js 16**, **TypeScript**, and **Tailwind CSS**. This application allows users to view, book, and manage work shifts across different locations.
+
+![Shift Booking App](./public/piexeldust.svg)
 
 ## ✨ Features
 
-- **My Shifts View**: View and manage all your booked shifts, grouped by date
-- **Available Shifts View**: Browse available shifts by city (Helsinki, Tampere, Turku)
-- **Book/Cancel Shifts**: Easy one-click booking and cancellation with loading states
-- **Smart Validation**: Prevents booking overlapping shifts or already started shifts
-- **Responsive Design**: Mobile-first design that works on all devices
+### Core Functionality
+- **📅 View Available Shifts** - Browse shifts organized by date with filtering by location
+- **✅ Book Shifts** - One-click booking with real-time status updates
+- **❌ Cancel Shifts** - Easy cancellation of booked shifts
+- **📊 My Shifts Dashboard** - View all booked shifts with total hours summary
+- **🌍 Location Filtering** - Filter shifts by Helsinki, Tampere, or Turku
 
-## 🛠️ Tech Stack
+### UI/UX Features
+- **🎨 Modern Design** - Clean, elegant UI with smooth animations
+- **🌙 Dark Mode** - Full dark mode support with system preference detection
+- **📱 Responsive Layout** - Works on mobile, tablet, and desktop
+- **⚡ Real-time Updates** - Instant feedback on booking/cancellation actions
+- **🔄 Loading States** - Skeleton loaders and button spinners for better UX
+- **⚠️ Error Handling** - User-friendly error messages
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4 + CSS Variables
-- **State Management**: Zustand
-- **HTTP Client**: Axios
-- **Linting**: ESLint
-
-## 📁 Project Structure
-
-```
-solutions/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Main page
-│   └── globals.css         # Global styles & design tokens
-├── src/
-│   ├── components/         # React components
-│   │   ├── ui/             # Reusable UI components
-│   │   ├── shifts/         # Shift-specific components
-│   │   └── layout/         # Layout components
-│   ├── hooks/              # Custom React hooks
-│   ├── services/           # API service layer
-│   ├── stores/             # Zustand state management
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Utility functions
-└── public/
-    └── assets/             # Static assets (spinners)
-```
+### Technical Features
+- **🔧 Type Safety** - Full TypeScript implementation
+- **🏪 State Management** - Zustand for efficient state management
+- **🔌 API Proxy** - Next.js rewrites to handle CORS
+- **🎯 SEO Optimized** - Comprehensive meta tags, OpenGraph, and Twitter cards
+- **♿ Accessible** - Keyboard navigation and screen reader support
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js >= 18
-- npm >= 9
+- Node.js 18+ 
+- npm or yarn
 
 ### Installation
 
-1. **Start the Mock API** (from the root directory):
-
+1. **Clone the repository**
 ```bash
-cd ..
+git clone https://github.com/pixeldust/shift-booking-app.git
+cd shift-booking-app
+```
+
+2. **Install dependencies for the API server** (from root directory)
+```bash
 npm install
+```
+
+3. **Install dependencies for the frontend** (from solutions directory)
+```bash
+cd solutions
+npm install
+```
+
+### Running the Application
+
+You need to run **both** the API server and the Next.js frontend:
+
+**Terminal 1 - Start the API server** (from root directory):
+```bash
 npm start
-# API runs at http://localhost:8080
 ```
+This starts the mock API at `http://127.0.0.1:8080`
 
-2. **Start the Frontend** (from the solutions directory):
+**Terminal 2 - Start the frontend** (from solutions directory):
+```bash
+cd solutions
+npm run dev
+```
+This starts the Next.js app at `http://localhost:3000`
+
+### Building for Production
 
 ```bash
-npm install
-npm run dev
-# App runs at http://localhost:3000
+cd solutions
+npm run build
+npm start
 ```
 
-### Available Scripts
+## 🏗️ Project Structure
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+```
+solutions/
+├── app/                      # Next.js App Router
+│   ├── globals.css           # Global styles & Tailwind config
+│   ├── layout.tsx            # Root layout with SEO metadata
+│   └── page.tsx              # Main application page
+├── src/
+│   ├── components/
+│   │   ├── shifts/           # Shift-related components
+│   │   │   ├── CityFilter/   # Location filter pills
+│   │   │   ├── ShiftCard/    # Individual shift card
+│   │   │   └── ShiftGroup/   # Date-grouped shifts
+│   │   ├── views/            # View components
+│   │   │   ├── MyShiftsView/       # Booked shifts view
+│   │   │   └── AvailableShiftsView/ # Available shifts view
+│   │   └── ui/               # Reusable UI components
+│   │       ├── button.tsx
+│   │       ├── badge.tsx
+│   │       ├── card.tsx
+│   │       ├── skeleton.tsx
+│   │       └── tabs.tsx
+│   ├── stores/               # Zustand state management
+│   │   └── shiftStore.ts     # Main application store
+│   ├── services/             # API service layer
+│   │   └── api.ts            # Axios-based API client
+│   ├── types/                # TypeScript type definitions
+│   │   └── shift.ts          # Shift-related types
+│   └── utils/                # Utility functions
+│       ├── constants.ts      # App configuration
+│       └── dateUtils.ts      # Date formatting utilities
+├── public/                   # Static assets
+│   └── piexeldust.svg        # App logo
+└── next.config.ts            # Next.js configuration with API proxy
+```
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Next.js 16** | React framework with App Router |
+| **TypeScript** | Type safety |
+| **Tailwind CSS** | Utility-first styling |
+| **Zustand** | State management |
+| **Axios** | HTTP client |
+| **Lucide React** | Icon library |
+| **next-themes** | Dark mode support |
+| **Radix UI** | Accessible UI primitives |
 
 ## 🎨 Design System
 
-The application uses a custom design system with CSS variables:
-
 ### Colors
+- **Primary**: Emerald/Teal gradient for actions
+- **Secondary**: Indigo for date headers
+- **Neutral**: Slate palette for backgrounds and text
+- **Accent**: Rose for cancel actions
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--color-primary` | `#16A64D` | Book buttons, success states |
-| `--color-accent` | `#E2006A` | Cancel buttons, danger states |
-| `--color-background` | `#F1F4F8` | Page background |
-| `--color-surface` | `#FFFFFF` | Cards, surfaces |
+### Components
+- **Cards**: Rounded corners, subtle shadows
+- **Buttons**: Gradient fills with hover states
+- **Badges**: Pill-shaped with semantic colors
+- **Tabs**: Pill-style with smooth transitions
 
-### Typography
+## 📱 Responsive Breakpoints
 
-- System font stack for optimal performance
-- Consistent font sizes from 12px to 30px
-- Clear hierarchy with meaningful weights
+| Breakpoint | Layout |
+|------------|--------|
+| Mobile | Single column |
+| Tablet (md) | 2-column grid |
+| Desktop (lg) | 3-column grid |
 
-## 📡 API Integration
+## 🔌 API Endpoints
 
-The app integrates with the Mock API running on `localhost:8080`:
+The application communicates with a mock API server:
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/shifts` | GET | Fetch all shifts |
-| `/shifts/{id}/book` | POST | Book a shift |
-| `/shifts/{id}/cancel` | POST | Cancel a shift |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/shifts` | List all shifts |
+| GET | `/shifts/:id` | Get shift by ID |
+| POST | `/shifts/:id/book` | Book a shift |
+| POST | `/shifts/:id/cancel` | Cancel a shift |
 
-## 🧪 State Management
+## 🧪 Validation Rules
 
-Using Zustand for clean, predictable state management:
+- **Cannot book**: Shifts that have already started
+- **Cannot book**: Overlapping shifts
+- **Cannot cancel**: Shifts that aren't booked
 
-- **Shifts data**: All shifts from API
-- **UI state**: Active tab, selected city filter
-- **Loading states**: Per-shift loading indicators
-- **Error handling**: Centralized error state
+## 📄 License
 
-## 📱 Responsive Design
+This project is part of the Pixeldust Frontend Hiring Assignment.
 
-- Mobile-first approach
-- Maximum container width of 480px (phone-optimized)
-- Touch-friendly button sizes and spacing
+## 👨‍💻 Author
 
-## 👤 Author
+**Omkar Chebale**
 
-Built with ❤️ for Pixeldust
-
----
-
-## License
-
-This project is part of a hiring assignment and is for evaluation purposes only.
+Made with ❤️ for Pixeldust

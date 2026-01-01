@@ -4,7 +4,11 @@ const server = new Hapi.Server({
   host: '127.0.0.1',
   port: '8080',
   routes: {
-    cors: { origin: 'ignore' },
+    cors: {
+      origin: ['*'],
+      headers: ['Accept', 'Content-Type'],
+      additionalHeaders: ['X-Requested-With'],
+    },
   },
 });
 
