@@ -6,8 +6,8 @@ import { ShiftArea, SHIFT_AREAS } from '@/types/shift';
 import { cn } from '@/lib/utils';
 
 interface CityFilterProps {
-    selectedCity: ShiftArea;
-    onCityChange: (city: ShiftArea) => void;
+    selectedCity: ShiftArea | 'all';
+    onCityChange: (city: ShiftArea | 'all') => void;
     cityCounts: { area: ShiftArea; count: number }[];
 }
 

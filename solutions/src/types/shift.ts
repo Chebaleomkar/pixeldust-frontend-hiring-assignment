@@ -55,7 +55,7 @@ export interface ShiftFilters {
 export interface ShiftState {
     shifts: Shift[];
     activeTab: TabType;
-    selectedArea: ShiftArea;
+    selectedArea: ShiftArea | 'all';
     isLoading: boolean;
     error: string | null;
     shiftLoadingStates: ShiftLoadingState;
@@ -63,6 +63,6 @@ export interface ShiftState {
     bookShift: (shiftId: string) => Promise<boolean>;
     cancelShift: (shiftId: string) => Promise<boolean>;
     setActiveTab: (tab: TabType) => void;
-    setSelectedArea: (area: ShiftArea) => void;
+    setSelectedArea: (area: ShiftArea | 'all') => void;
     clearError: () => void;
 }

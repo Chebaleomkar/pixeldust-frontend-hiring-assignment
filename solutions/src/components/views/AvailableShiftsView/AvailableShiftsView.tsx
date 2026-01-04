@@ -10,8 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface AvailableShiftsViewProps {
     shifts: Shift[];
-    selectedCity: ShiftArea;
-    onCityChange: (city: ShiftArea) => void;
+    selectedCity: ShiftArea | 'all';
+    onCityChange: (city: ShiftArea | 'all') => void;
     loadingStates: ShiftLoadingState;
     onBook: (shiftId: string) => void;
     onCancel: (shiftId: string) => void;

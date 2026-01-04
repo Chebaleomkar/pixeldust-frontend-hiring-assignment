@@ -6,7 +6,7 @@ import { shiftApi } from '@/services/api';
 interface ShiftStore {
     shifts: Shift[];
     activeTab: TabType;
-    selectedArea: ShiftArea;
+    selectedArea: ShiftArea | 'all';
     isLoading: boolean;
     error: string | null;
     shiftLoadingStates: ShiftLoadingState;
@@ -15,7 +15,7 @@ interface ShiftStore {
     bookShift: (shiftId: string) => Promise<boolean>;
     cancelShift: (shiftId: string) => Promise<boolean>;
     setActiveTab: (tab: TabType) => void;
-    setSelectedArea: (area: ShiftArea) => void;
+    setSelectedArea: (area: ShiftArea | 'all') => void;
     clearError: () => void;
     setError: (error: string) => void;
 }
