@@ -51,8 +51,8 @@ A modern, responsive shift booking application built with Next.js 16, TypeScript
 
 1. Clone the repository
 ```bash
-git clone https://github.com/pixeldust/shift-booking-app.git
-cd shift-booking-app
+git clone https://github.com/Chebaleomkar/pixeldust-frontend-hiring-assignment.git
+cd pixeldust-frontend-hiring-assignment/solutions 
 ```
 
 2. Install API dependencies (from root directory)
