@@ -105,7 +105,7 @@ export const useShiftStore = create<ShiftStore>()(
             },
 
             setActiveTab: (tab: TabType) => set({ activeTab: tab, error: null }),
-            setSelectedArea: (area: ShiftArea) => set({ selectedArea: area }),
+            setSelectedArea: (area: ShiftArea | 'all') => set({ selectedArea: area }),
             clearError: () => set({ error: null }),
             setError: (error: string) => set({ error }),
         }),
