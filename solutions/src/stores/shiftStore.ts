@@ -117,7 +117,11 @@ export const useBookedShifts = () =>
     useShiftStore((state) => state.shifts.filter((s) => s.booked));
 
 export const useFilteredShifts = () =>
-    useShiftStore((state) => state.shifts.filter((s) => s.area === state.selectedArea));
+    useShiftStore((state) =>
+        state.selectedArea === 'all'
+            ? state.shifts
+            : state.shifts.filter((s) => s.area === state.selectedArea)
+    );
 
 export const useShiftLoadingState = (shiftId: string) =>
     useShiftStore((state) => state.shiftLoadingStates[shiftId] || null);
