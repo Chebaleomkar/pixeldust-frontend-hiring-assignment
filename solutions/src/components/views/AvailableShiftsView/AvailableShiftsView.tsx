@@ -74,6 +74,7 @@ export const AvailableShiftsView = memo(function AvailableShiftsView({
                             return (
                                 <button
                                     key={area}
+                                    type="button"
                                     onClick={() => onCityChange(area)}
                                     aria-label={`Switch to ${area} with ${count} shifts`}
                                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
