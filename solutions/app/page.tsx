@@ -143,7 +143,7 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span className="text-sm font-medium">{error}</span>
               </div>
               <Button
@@ -151,7 +151,7 @@ export default function HomePage() {
                 size="icon"
                 onClick={clearError}
                 aria-label="Dismiss error"
-                className="h-7 w-7 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-md flex-shrink-0"
+                className="h-7 w-7 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-900/30 rounded-md shrink-0"
               >
                 <X className="w-4 h-4" aria-hidden="true" />
               </Button>

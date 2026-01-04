@@ -54,7 +54,7 @@ export const ShiftCard = memo(function ShiftCard({
         >
             <div
                 className={cn(
-                    "flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center",
+                    "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center",
                     shift.booked ? "bg-emerald-100 dark:bg-emerald-900/50" : "bg-slate-100 dark:bg-slate-800"
                 )}
                 aria-hidden="true"
