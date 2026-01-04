@@ -40,13 +40,6 @@ const getAllowedOrigins = () => {
 
 const allowedOrigins = getAllowedOrigins();
 
-// Custom origin validation function
-const validateOrigin = (origin) => {
-  // Allow requests with no origin (same-origin, curl, Postman, etc.)
-  if (!origin) return true;
-  return allowedOrigins.includes(origin);
-};
-
 const server = new Hapi.Server({
   host: '127.0.0.1',
   port: process.env.PORT || '8080',
