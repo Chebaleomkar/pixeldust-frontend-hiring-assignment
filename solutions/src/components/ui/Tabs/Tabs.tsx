@@ -43,6 +43,7 @@ export function Tabs({
                 <button
                     key={tab.id}
                     role="tab"
+                    type="button"
                     aria-selected={activeTab === tab.id}
                     aria-controls={`panel-${tab.id}`}
                     id={`tab-${tab.id}`}
