@@ -83,6 +83,23 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Environment Configuration
+
+The frontend uses environment variables for configuration:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | Backend API URL | `http://127.0.0.1:8080` |
+
+**Local development** - No configuration needed (uses localhost fallback).
+
+**Production/Staging** - Create `.env.production` or set in your CI/deployment:
+
+```env
+NEXT_PUBLIC_API_URL=https://api.your-domain.com
+```
+
+
 ### Building for Production
 
 ```bash

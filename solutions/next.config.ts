@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8080';
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -9,7 +11,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/shifts/:path*',
-        destination: 'http://127.0.0.1:8080/shifts/:path*',
+        destination: `${API_BASE_URL}/shifts/:path*`,
       },
     ];
   },
