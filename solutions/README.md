@@ -176,6 +176,5 @@ solutions/
 
 ## Author
 
-**Omkar Chebale**
+### Omkar Chebale
 
-Made with ❤️ for Pixeldust
