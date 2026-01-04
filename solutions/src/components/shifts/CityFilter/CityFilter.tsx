@@ -35,6 +35,7 @@ export const CityFilter = memo(function CityFilter({
                         return (
                             <button
                                 key={area}
+                                type='button'
                                 onClick={() => onCityChange(area)}
                                 role="radio"
                                 aria-checked={isSelected}
