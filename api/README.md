@@ -64,6 +64,74 @@ If port 8080 is already in use, stop any existing processes on that port or modi
 
 ---
 
+## 🔒 Environment Configuration
+
+### CORS Configuration
+
+The API server implements secure CORS handling with environment-based origin allowlists.
+
+#### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NODE_ENV` | Set to `production` for production mode | Yes (in prod) |
+| `ALLOWED_ORIGINS` | Comma-separated list of allowed origins | Yes (in prod) |
+| `PORT` | Server port (default: 8080) | No |
+
+#### Development Mode (Default)
+
+When `NODE_ENV` is not set to `production`, the server automatically allows:
+- `http://localhost:3000`
+- `http://localhost:3001`
+- `http://127.0.0.1:3000`
+- `http://127.0.0.1:3001`
+
+No additional configuration is required for local development.
+
+#### Production Mode
+
+When `NODE_ENV=production`, you **must** set the `ALLOWED_ORIGINS` environment variable:
+
+```bash
+# Example: Single origin
+export NODE_ENV=production
+export ALLOWED_ORIGINS=https://your-app.example.com
+
+# Example: Multiple origins
+export ALLOWED_ORIGINS=https://app.example.com,https://staging.example.com
+```
+
+#### Example `.env` file for production:
+
+```env
+NODE_ENV=production
+PORT=8080
+ALLOWED_ORIGINS=https://shifts.example.com,https://www.shifts.example.com
+```
+
+#### Running with environment variables:
+
+```bash
+# Linux/macOS
+NODE_ENV=production ALLOWED_ORIGINS=https://your-domain.com npm start
+
+# Windows (PowerShell)
+$env:NODE_ENV="production"; $env:ALLOWED_ORIGINS="https://your-domain.com"; npm start
+
+# Windows (CMD)
+set NODE_ENV=production && set ALLOWED_ORIGINS=https://your-domain.com && npm start
+```
+
+### Security Notes
+
+- In production, requests from origins not in the allowlist will be rejected
+- The `headers` and `additionalHeaders` CORS options remain unchanged:
+  - `headers`: `['Accept', 'Content-Type']`
+  - `additionalHeaders`: `['X-Requested-With']`
+- Always use HTTPS origins in production
+
+---
+
 ## Shift data model
 
 * `id`: UUID, a unique identifier
